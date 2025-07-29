@@ -1495,7 +1495,7 @@ endef
 
 define DO_WINDRES
 $(echo_cmd) "WINDRES $<"
-$(Q)$(WINDRES) -i $< -o $@
+$(Q)$(WINDRES) -Imisc -i $< -o $@
 endef
 
 
