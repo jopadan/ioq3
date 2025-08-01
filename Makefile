@@ -1974,7 +1974,6 @@ Q3OBJ = \
   \
   $(B)/client/unzip.o \
   $(B)/client/ioapi.o \
-  $(B)/client/puff.o \
   $(B)/client/vm.o \
   $(B)/client/vm_interpreted.o \
   \
@@ -2075,7 +2074,9 @@ Q3R2OBJ = \
   $(B)/renderergl2/tr_world.o \
   \
   $(B)/renderergl1/sdl_gamma.o \
-  $(B)/renderergl1/sdl_glimp.o
+  $(B)/renderergl1/sdl_glimp.o \
+  \
+  $(B)/renderergl2/puff.o
 
 Q3R2STRINGOBJ = \
   $(B)/renderergl2/glsl/bokeh_fp.o \
@@ -2140,18 +2141,18 @@ Q3ROBJ = \
   $(B)/renderergl1/tr_world.o \
   \
   $(B)/renderergl1/sdl_gamma.o \
-  $(B)/renderergl1/sdl_glimp.o
+  $(B)/renderergl1/sdl_glimp.o \
+  \
+  $(B)/renderergl1/puff.o
 
 ifneq ($(USE_RENDERER_DLOPEN), 0)
   Q3ROBJ += \
     $(B)/renderergl1/q_shared.o \
-    $(B)/renderergl1/puff.o \
     $(B)/renderergl1/q_math.o \
     $(B)/renderergl1/tr_subs.o
 
   Q3R2OBJ += \
     $(B)/renderergl2/q_shared.o \
-    $(B)/renderergl2/puff.o \
     $(B)/renderergl2/q_math.o \
     $(B)/renderergl2/tr_subs.o
 endif
