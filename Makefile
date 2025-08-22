@@ -2914,7 +2914,7 @@ $(B)/$(MISSIONPACK)/vm/ui.qvm: $(MPUIVMOBJ) $(UIDIR)/ui_syscalls.asm $(Q3ASM)
 ## CLIENT/SERVER RULES
 #############################################################################
 
-$(B)/client/%.o: $(ASMDIR)/%.s
+$(B)/client/%.o: $(ASMDIR)/%.S
 	$(DO_AS)
 
 # k8 so inline assembler knows about SSE
@@ -3013,7 +3013,7 @@ $(B)/renderergl2/%.o: $(RGL2DIR)/%.c
 	$(DO_REF_CC)
 
 
-$(B)/ded/%.o: $(ASMDIR)/%.s
+$(B)/ded/%.o: $(ASMDIR)/%.S
 	$(DO_AS)
 
 # k8 so inline assembler knows about SSE
