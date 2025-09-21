@@ -537,7 +537,10 @@ static int GLimp_SetMode(int mode, qboolean fullscreen, qboolean noborder, qbool
 		int profileMask;
 		qboolean preferOpenGLES;
 
+#if !defined(__POWERPC__)
+		// SDL 2.0.1 doesn't support this, skip on PowerPC
 		SDL_GL_ResetAttributes();
+#endif
 		SDL_GL_GetAttribute( SDL_GL_CONTEXT_PROFILE_MASK, &profileMask );
 
 		preferOpenGLES = ( r_preferOpenGLES->integer == 1 ||
