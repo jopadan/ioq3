@@ -2421,7 +2421,7 @@ ifeq ($(HAVE_VM_COMPILED),true)
       $(B)/client/vm_x86.o
   endif
   ifneq ($(findstring $(ARCH),ppc ppc64),)
-    Q3OBJ += $(B)/client/vm_powerpc.o $(B)/client/vm_powerpc_asm.o
+    Q3OBJ += $(B)/client/vm_powerpc.o
   endif
   ifeq ($(ARCH),sparc)
     Q3OBJ += $(B)/client/vm_sparc.o
