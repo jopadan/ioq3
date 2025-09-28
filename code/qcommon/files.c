@@ -729,6 +729,7 @@ long FS_BaseDir_FOpenFileRead(const char *filename, fileHandle_t *fp)
 {
 	char *ospath;
 	fileHandle_t f = 0;
+	int i = 0;
 
 	if ( !fs_searchpaths ) {
 		Com_Error( ERR_FATAL, "Filesystem call made without initialization" );
@@ -742,7 +743,7 @@ long FS_BaseDir_FOpenFileRead(const char *filename, fileHandle_t *fp)
 	// don't let sound stutter
 	S_ClearSoundBuffer();
 
-	for(int i = 0; i < ARRAY_LEN( fs_pathVars ) && !fsh[f].handleFiles.file.o; i++) {
+	for(i = 0; i < ARRAY_LEN( fs_pathVars ) && !fsh[f].handleFiles.file.o; i++) {
 		const cvar_t *pathVar = fs_pathVars[i];
 
 		if (!pathVar || !pathVar->string[0]) {
@@ -1362,6 +1363,7 @@ int FS_FindVM(void **startSearch, char *found, int foundlen, const char *name, i
 	pack_t *pack;
 	char qvmName[MAX_OSPATH];
 	char *netpath;
+	int i = 0;
 
 	if(!fs_searchpaths)
 		Com_Error(ERR_FATAL, "Filesystem call made without initialization");
@@ -1391,7 +1393,7 @@ int FS_FindVM(void **startSearch, char *found, int foundlen, const char *name, i
 					"%s" ARCH_STRING DLL_EXT
 				};
 
-				for(int i = 0; i < ARRAY_LEN(dllNameFormats); i++)
+				for(i = 0; i < ARRAY_LEN(dllNameFormats); i++)
 				{
 					char dllName[MAX_OSPATH];
 					Com_sprintf(dllName, sizeof(dllName), dllNameFormats[i], name);
@@ -2973,8 +2975,9 @@ FS_AddGameDirectories
 */
 static void FS_AddGameDirectories(const char *dir)
 {
+	int i = 0;
 	// add search path elements in reverse priority order
-	for(int i = ARRAY_LEN(fs_pathVars) - 1; i >= 0; i--) {
+	for(i = ARRAY_LEN(fs_pathVars) - 1; i >= 0; i--) {
 		const cvar_t *pathVar = fs_pathVars[i];
 
 		if (!pathVar || !pathVar->string[0]) {
@@ -3264,19 +3267,20 @@ FS_AddPathVar
 ================
 */
 static void FS_AddPathVar( cvar_t *pathVar ) {
+	int i = 0;
 	if( !pathVar || !*pathVar->string ) {
 		return;
 	}
 
 	// Check for duplicates
-	for( int i = 0; i < ARRAY_LEN( fs_pathVars ); i++ ) {
+	for( i = 0; i < ARRAY_LEN( fs_pathVars ); i++ ) {
 		if ( fs_pathVars[i] && !Q_stricmp( fs_pathVars[i]->string, pathVar->string ) ) {
 			return;
 		}
 	}
 
 	// Add to first empty slot
-	for( int i = 0; i < ARRAY_LEN( fs_pathVars ); i++ ) {
+	for( i = 0; i < ARRAY_LEN( fs_pathVars ); i++ ) {
 		if ( !fs_pathVars[i] ) {
 			fs_pathVars[i] = pathVar;
 			return;
