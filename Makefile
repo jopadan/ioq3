@@ -603,23 +603,31 @@ ifeq ($(PLATFORM),darwin)
       MACLIBSDIR=$(LIBSDIR)/macosx-ub2
       BASE_CFLAGS += -I$(SDLHDIR)/include
     else
-      # Universal Binary - for running on Mac OS X 10.5 or later
-      # ppc (10.5/10.6), x86 (10.6 or later), x86_64 (10.6 or later)
-      #
-      # x86/x86_64 on 10.5 will run the ppc build.
-      #
-      # SDL 2.0.1,  last with Mac OS X PowerPC
-      # SDL 2.0.4,  last with Mac OS X 10.5 (x86/x86_64)
-      # SDL 2.0.22, last with Mac OS X 10.6 (x86/x86_64)
-      #
-      # code/libs/macosx-ub/libSDL2-2.0.0.dylib contents
-      # - ppc build is SDL 2.0.1 with a header change so it compiles
-      # - x86/x86_64 build are SDL 2.0.22
-      MACLIBSDIR=$(LIBSDIR)/macosx-ub
-      ifneq ($(findstring $(ARCH),ppc ppc64),)
-        BASE_CFLAGS += -I$(SDLHDIR)/include-macppc
-      else
-        BASE_CFLAGS += -I$(SDLHDIR)/include-2.0.22
+      ifeq ($(shell test $(MAC_OS_X_VERSION_MIN_REQUIRED) -ge 1030; echo $$?),0)
+        # Experimental Mac OS X Panther build
+        # ppc (10.3/10.4)
+        MACLIBSDIR=$(LIBSDIR)/macosx-panther
+        BASE_CFLAGS += -I$(SDLHDIR)/include-macpanther
+        PANTHER=1
+	  else
+        # Universal Binary - for running on Mac OS X 10.5 or later
+        # ppc (10.5/10.6), x86 (10.6 or later), x86_64 (10.6 or later)
+        #
+        # x86/x86_64 on 10.5 will run the ppc build.
+        #
+        # SDL 2.0.1,  last with Mac OS X PowerPC
+        # SDL 2.0.4,  last with Mac OS X 10.5 (x86/x86_64)
+        # SDL 2.0.22, last with Mac OS X 10.6 (x86/x86_64)
+        #
+        # code/libs/macosx-ub/libSDL2-2.0.0.dylib contents
+        # - ppc build is SDL 2.0.1 with a header change so it compiles
+        # - x86/x86_64 build are SDL 2.0.22
+        MACLIBSDIR=$(LIBSDIR)/macosx-ub
+        ifneq ($(findstring $(ARCH),ppc ppc64),)
+          BASE_CFLAGS += -I$(SDLHDIR)/include-macppc
+        else
+          BASE_CFLAGS += -I$(SDLHDIR)/include-2.0.22
+        endif
       endif
     endif
 
@@ -640,6 +648,9 @@ ifeq ($(PLATFORM),darwin)
 
   SHLIBEXT=dylib
   SHLIBCFLAGS=-fPIC -fno-common
+  ifdef PANTHER
+    LDFLAGS += -Wl,-flat_namespace -Wl,-undefined,suppress
+  endif
   SHLIBLDFLAGS=-dynamiclib $(LDFLAGS) -Wl,-U,_com_altivec
 
   NOTSHLIBCFLAGS=-mdynamic-no-pic
@@ -2460,7 +2471,11 @@ ifneq ($(strip $(LIBSDLMAIN)),)
 ifneq ($(strip $(LIBSDLMAINSRC)),)
 $(LIBSDLMAIN) : $(LIBSDLMAINSRC)
 ifeq ($(PLATFORM),darwin)
-	$(LIPO) -extract $(MACOSX_ARCH) $< -o $@
+  ifndef PANTHER
+    $(LIPO) -extract $(MACOSX_ARCH) $< -o $@
+  else
+	cp $< $@
+  endif
 else
 	cp $< $@
 endif

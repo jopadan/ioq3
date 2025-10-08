@@ -3254,7 +3254,12 @@ void CL_InitRef( void ) {
 	Com_Printf( "----- Initializing Renderer ----\n" );
 
 #ifdef USE_RENDERER_DLOPEN
+
+#ifdef LEGACY_GL
+	cl_renderer = Cvar_Get("cl_renderer", "opengl1", CVAR_ARCHIVE | CVAR_LATCH);
+#else
 	cl_renderer = Cvar_Get("cl_renderer", "opengl2", CVAR_ARCHIVE | CVAR_LATCH);
+#endif
 
 	Com_sprintf(dllName, sizeof(dllName), "renderer_%s" DLL_EXT, cl_renderer->string);
 

@@ -142,7 +142,10 @@ if [ "${CURRENT_ARCH}" != "" ]; then
 fi
 
 # select SDL run-time dylib
-if [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.5" ] \
+if [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.3" ] \
+  || [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.4" ]; then
+  PANTHER=1
+elif [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.5" ] \
   || [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.6" ] \
   || [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.7" ] \
   || [ "${MACOSX_DEPLOYMENT_TARGET}" = "10.8" ]; then
@@ -309,7 +312,9 @@ if [ ! -d "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}" ]; then
 fi
 
 # copy and generate some application bundle resources
-if [ $UNIVERSAL_BINARY -eq 2 ]; then
+if [ $PANTHER -eq 1 ]; then
+	cp code/thirdparty/libs/macosx-panther/*.dylib "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_FOLDER_PATH}"
+elif [ $UNIVERSAL_BINARY -eq 2 ]; then
 	cp code/thirdparty/libs/macosx-ub2/*.dylib "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_FOLDER_PATH}"
 else
 	cp code/thirdparty/libs/macosx-ub/*.dylib "${BUILT_PRODUCTS_DIR}/${EXECUTABLE_FOLDER_PATH}"
