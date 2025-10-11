@@ -603,13 +603,7 @@ ifeq ($(PLATFORM),darwin)
       MACLIBSDIR=$(LIBSDIR)/macosx-ub2
       BASE_CFLAGS += -I$(SDLHDIR)/include
     else
-      ifeq ($(shell test $(MAC_OS_X_VERSION_MIN_REQUIRED) -ge 1030; echo $$?),0)
-        # Experimental Mac OS X Panther build
-        # ppc (10.3/10.4)
-        MACLIBSDIR=$(LIBSDIR)/macosx-panther
-        BASE_CFLAGS += -I$(SDLHDIR)/include-macpanther
-        PANTHER=1
-	  else
+      ifeq ($(shell test $(MAC_OS_X_VERSION_MIN_REQUIRED) -ge 1050; echo $$?),0)
         # Universal Binary - for running on Mac OS X 10.5 or later
         # ppc (10.5/10.6), x86 (10.6 or later), x86_64 (10.6 or later)
         #
@@ -628,6 +622,13 @@ ifeq ($(PLATFORM),darwin)
         else
           BASE_CFLAGS += -I$(SDLHDIR)/include-2.0.22
         endif
+        PANTHER=0
+      else
+        # Experimental Mac OS X Panther build
+        # ppc (10.3/10.4)
+        MACLIBSDIR=$(LIBSDIR)/macosx-panther
+        BASE_CFLAGS += -I$(SDLHDIR)/include-macpanther
+        PANTHER=1
       endif
     endif
 
@@ -648,7 +649,7 @@ ifeq ($(PLATFORM),darwin)
 
   SHLIBEXT=dylib
   SHLIBCFLAGS=-fPIC -fno-common
-  ifdef PANTHER
+  ifeq ($(PANTHER),1)
     LDFLAGS += -Wl,-flat_namespace -Wl,-undefined,suppress
   endif
   SHLIBLDFLAGS=-dynamiclib $(LDFLAGS) -Wl,-U,_com_altivec
