@@ -189,7 +189,8 @@ static void DrawNormals (shaderCommands_t *input) {
 	float* writePtr = lineVertices;
 
 	// Build the line list
-	for (int i = 0; i < vertexCount; ++i, positionsXYZW += 4) {
+        int i = 0;
+	for (i = 0; i < vertexCount; ++i, positionsXYZW += 4) {
 		vec3_t n;
 
 		if (usePacked) {
